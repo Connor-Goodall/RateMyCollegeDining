@@ -71,6 +71,19 @@ namespace RateMyCollegeDining.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
+
+            [DataType(DataType.Text)]
+            [Display(Name = "Full Name")]
+            public string Name { get; set; }
+
+            [Required]
+            [DataType(DataType.Date)]
+            public DateTime Date_Joined { get; set; }
+
+            [DataType(DataType.Text)]
+            [Display(Name = "University you attend")]
+            public string University { get; set; }
+
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -115,6 +128,24 @@ namespace RateMyCollegeDining.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
+                if(Input.Name != null)
+                {
+                    user.Name = Input.Name;
+                }
+                else
+                {
+                    user.Name = "No name";
+                }
+
+                if(Input.University != null)
+                {
+                    user.University = Input.University;
+                }
+                else
+                {
+                    user.University = "No university";
+                }
+                user.Date_Joined = DateTime.Now;
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
