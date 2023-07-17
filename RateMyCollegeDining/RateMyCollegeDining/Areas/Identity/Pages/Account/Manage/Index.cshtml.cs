@@ -36,12 +36,6 @@ namespace RateMyCollegeDining.Areas.Identity.Pages.Account.Manage
         [DataType(DataType.DateTime)]
         public DateTime DateJoined { get; set; }
 
-        public string name { get; set; }
-
-        public string university { get; set; }
-
-        public string bio { get; set; }
-
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
@@ -97,20 +91,13 @@ namespace RateMyCollegeDining.Areas.Identity.Pages.Account.Manage
 
             Username = userName;
             DateJoined = dateUser.Date_Joined;
-            university = dateUser.University;
-            name = dateUser.Name;
-            bio = "No Bio";
-            if(dateUser.Bio != null)
-            {
-                bio = dateUser.Bio;
-            }
-
             Input = new InputModel
             {
                 PhoneNumber = phoneNumber,
-                Name = name,
-                University = university,
-                Bio = bio
+                Name = user.Name,
+                University = user.University,
+                Bio = user.Bio,
+                ProfilePicture = user.ProfilePicture,
             };
         }
 
