@@ -32,7 +32,15 @@ namespace RateMyCollegeDining.Areas.Identity.Pages.Account.Manage
         /// </summary>
         public string Username { get; set; }
 
+        [Display(Name = "Date Joined")]
+        [DataType(DataType.DateTime)]
         public DateTime DateJoined { get; set; }
+
+        public string name { get; set; }
+
+        public string university { get; set; }
+
+        public string bio { get; set; }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -61,10 +69,10 @@ namespace RateMyCollegeDining.Areas.Identity.Pages.Account.Manage
             /// 
 
             [DataType(DataType.Text)]
-            [Display(Name = "Full name")]
+            [Display(Name = "Full Name")]
             public string Name { get; set; }
 
-            [DataType(DataType.Text)]
+            [DataType(DataType.MultilineText)]
             [Display(Name = "Bio")]
             public string Bio { get; set; }
 
@@ -88,12 +96,21 @@ namespace RateMyCollegeDining.Areas.Identity.Pages.Account.Manage
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
             Username = userName;
-
             DateJoined = dateUser.Date_Joined;
+            university = dateUser.University;
+            name = dateUser.Name;
+            bio = "No Bio";
+            if(dateUser.Bio != null)
+            {
+                bio = dateUser.Bio;
+            }
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                Name = name,
+                University = university,
+                Bio = bio
             };
         }
 
