@@ -32,6 +32,16 @@ namespace RateMyCollegeDining.Areas.Identity.Pages.Account.Manage
         /// </summary>
         public string Username { get; set; }
 
+        [Display(Name = "Date Joined")]
+        [DataType(DataType.DateTime)]
+        public DateTime DateJoined { get; set; }
+
+        public string name { get; set; }
+
+        public string university { get; set; }
+
+        public string bio { get; set; }
+
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
@@ -56,6 +66,24 @@ namespace RateMyCollegeDining.Areas.Identity.Pages.Account.Manage
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+            /// 
+
+            [DataType(DataType.Text)]
+            [Display(Name = "Full Name")]
+            public string Name { get; set; }
+
+            [DataType(DataType.MultilineText)]
+            [Display(Name = "Bio")]
+            public string Bio { get; set; }
+
+            [DataType(DataType.Text)]
+            [Display(Name = "University")]
+            public string University { get; set; }
+
+            [DataType(DataType.ImageUrl)]
+            [Display(Name = "Profile Picture")]
+            public byte[] ProfilePicture { get; set; }
+
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
@@ -64,13 +92,25 @@ namespace RateMyCollegeDining.Areas.Identity.Pages.Account.Manage
         private async Task LoadAsync(ApplicationUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
+            var dateUser = await _userManager.GetUserAsync(User);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
             Username = userName;
+            DateJoined = dateUser.Date_Joined;
+            university = dateUser.University;
+            name = dateUser.Name;
+            bio = "No Bio";
+            if(dateUser.Bio != null)
+            {
+                bio = dateUser.Bio;
+            }
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                Name = name,
+                University = university,
+                Bio = bio
             };
         }
 
@@ -110,7 +150,41 @@ namespace RateMyCollegeDining.Areas.Identity.Pages.Account.Manage
                     return RedirectToPage();
                 }
             }
+            if(Input.Name != user.Name)
+            {
+                if(Input.Name != null)
+                {
+                    user.Name = Input.Name;
+                }
+            }
 
+            if(Input.University != user.University)
+            {
+                if(Input.University != null)
+                {
+                    user.University = Input.University;
+                }
+            }
+
+            if(Input.Bio != user.Bio)
+            {
+                if(Input.Bio != null) 
+                {
+                    user.Bio = Input.Bio;
+                }
+            }
+
+            if(Request.Form.Files.Count > 0) 
+            {
+                IFormFile file = Request.Form.Files.FirstOrDefault();
+                using (var dataStream = new MemoryStream()) 
+                {
+                    await file.CopyToAsync(dataStream);
+                    user.ProfilePicture = dataStream.ToArray();
+                }
+            }
+
+            await _userManager.UpdateAsync(user);
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();

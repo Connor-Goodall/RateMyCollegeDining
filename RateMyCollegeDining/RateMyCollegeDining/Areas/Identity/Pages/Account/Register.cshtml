@@ -18,6 +18,11 @@
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
+                <input asp-for="Input.UserName" class="form-control" placeholder="Your Username" />
+                <label asp-for="Input.UserName"></label>
+                <span asp-validation-for="Input.UserName" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
                 <input asp-for="Input.Name" class="form-control" placeholder="Full Name"/>
                 <label asp-for="Input.Name">Full Name</label>
                 <span asp-validation-for="Input.Name" class="text-danger"></span>
